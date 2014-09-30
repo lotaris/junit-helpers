@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -243,6 +245,47 @@ public final class Assert {
 		
 		// the following parameters should not be used and keep their default values
 		assertEquals(false, annotation.orphanRemoval());
+		assertEquals(void.class, annotation.targetEntity());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the OneToMany annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param cascadeTypes the operations that must be cascaded to the target of the association
+	 * @param fetchTypes whether the association should be lazily loaded or must be eagerly fetched
+	 * @param mappedBy the field that owns the relationship
+	 */
+	public static void assertOneToManyAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchTypes, String mappedBy) {
+		OneToMany annotation = assertAnnotationPresentOnField(OneToMany.class, c, field);
+		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes));
+		assertEquals(fetchTypes, annotation.fetch());
+		assertEquals(mappedBy, annotation.mappedBy());
+
+		// the following parameters should not be used and keep their default values
+		assertEquals(false, annotation.orphanRemoval());
+		assertEquals(void.class, annotation.targetEntity());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the ManyToOne annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param cascadeTypes the operations that must be cascaded to the target of the association
+	 * @param fetchTypes whether the association should be lazily loaded or must be eagerly fetched
+	 * @param optional whether the association is optional
+	 */
+	public static void assertManyToOneAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchTypes, boolean optional) {
+		ManyToOne annotation = assertAnnotationPresentOnField(ManyToOne.class, c, field);
+		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes));
+		assertEquals(fetchTypes, annotation.fetch());
+		assertEquals(optional, annotation.optional());
+		
+		// the following parameters should not be used and keep their default values
 		assertEquals(void.class, annotation.targetEntity());
 	}
 	
