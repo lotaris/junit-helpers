@@ -205,17 +205,17 @@ public final class Assert {
 	 * 
 	 * @param c the class
 	 * @param field the name of the field to check
-	 * @param nullable whether the database column is nullable
-	 * @param name the name of the column
-	 * @param length the column length
-	 * @param unique whether the column is a unique key
+	 * @param nullable whether the database column is nullable, by default true
+	 * @param name the name of the column, by default ""
+	 * @param length the column length, by default 255
+	 * @param unique whether the column is a unique key, by default false
 	 */
-	public static void assertColumnAnnotation(Class c, String field, boolean nullable, String name, int length, boolean unique) {
+	public static void assertColumnAnnotation(Class c, String field, Boolean nullable, String name, Integer length, Boolean unique) {
 		Column annotation = assertAnnotationPresentOnField(Column.class, c, field);
-		assertEquals(nullable, annotation.nullable());
-		assertEquals(name, annotation.name());
-		assertEquals(length, annotation.length());
-		assertEquals(unique, annotation.unique());
+		assertEquals(nullable != null ? nullable : true, annotation.nullable());
+		assertEquals(name != null ? name : "", annotation.name());
+		assertEquals(length != null ? length : 255, annotation.length());
+		assertEquals(unique != null ? unique : false, annotation.unique());
 		
 		// the following parameters should not be used and keep their default values
 		assertEquals("", annotation.columnDefinition());
@@ -232,17 +232,17 @@ public final class Assert {
 	 * 
 	 * @param c the class
 	 * @param field the name of the field to check
-	 * @param cascadeTypes the operations that must be cascaded to the target of the association
-	 * @param fetchTypes whether the association should be lazily loaded or must be eagerly fetched
-	 * @param mappedBy the field that owns the relationship
-	 * @param optional whether the association is optional
+	 * @param cascadeTypes the operations that must be cascaded to the target of the association, by default {}
+	 * @param fetchType whether the association should be lazily loaded or must be eagerly fetched, by default FetchType.EAGER
+	 * @param mappedBy the field that owns the relationship, by default ""
+	 * @param optional whether the association is optional, by default true
 	 */
-	public static void assertOneToOneAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchTypes, String mappedBy, boolean optional) {
+	public static void assertOneToOneAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchType, String mappedBy, Boolean optional) {
 		OneToOne annotation = assertAnnotationPresentOnField(OneToOne.class, c, field);
-		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes));
-		assertEquals(fetchTypes, annotation.fetch());
-		assertEquals(mappedBy, annotation.mappedBy());
-		assertEquals(optional, annotation.optional());
+		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes != null ? cascadeTypes : new CascadeType[]{}));
+		assertEquals(fetchType != null ? fetchType : FetchType.EAGER, annotation.fetch());
+		assertEquals(mappedBy != null ? mappedBy : "", annotation.mappedBy());
+		assertEquals(optional != null ? optional : true, annotation.optional());
 		
 		// the following parameters should not be used and keep their default values
 		assertEquals(false, annotation.orphanRemoval());
@@ -342,16 +342,16 @@ public final class Assert {
 	 * 
 	 * @param c the class
 	 * @param field the name of the field to check
-	 * @param nullable whether the database column is nullable
-	 * @param name the name of the column
-	 * @param unique whether the column is a unique key
+	 * @param nullable whether the database column is nullable, by default true
+	 * @param name the name of the column, by default ""
+	 * @param unique whether the column is a unique key, by default false
 	 */
-	public static void assertJoinColumnAnnotation(Class c, String field, boolean nullable, String name,  boolean unique) {
+	public static void assertJoinColumnAnnotation(Class c, String field, Boolean nullable, String name,  Boolean unique) {
 		JoinColumn annotation = assertAnnotationPresentOnField(JoinColumn.class, c, field);
-		assertEquals(name, annotation.name());
-		assertEquals(nullable, annotation.nullable());
-		assertEquals(unique, annotation.unique());
-		
+		assertEquals(name != null ? name : "", annotation.name());
+		assertEquals(nullable != null ? nullable : true, annotation.nullable());
+		assertEquals(unique != null ? unique : false, annotation.unique());
+
 		// the following parameters should not be used and keep their default values
 		assertEquals("", annotation.columnDefinition());
 		// TODO:
