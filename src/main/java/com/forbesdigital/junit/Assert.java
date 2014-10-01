@@ -47,8 +47,8 @@ public final class Assert {
 	 * @param c the class to check
 	 * @return the annotation instance
 	 */
-	public static void assertAnnotationPresentOnClass(Class<? extends Annotation> annotationClass, Class c) {
-		assertAnnotationPresentOnClass("Expected " + c.getName() + " to have annotation " + annotationClass.getName(), annotationClass, c);
+	public static <T extends Annotation> T assertAnnotationPresentOnClass(Class<T> annotationClass, Class c) {
+		return assertAnnotationPresentOnClass("Expected " + c.getName() + " to have annotation " + annotationClass.getName(), annotationClass, c);
 	}
 
 	/**
