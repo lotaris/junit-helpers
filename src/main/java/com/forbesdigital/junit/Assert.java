@@ -4,12 +4,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -244,6 +247,93 @@ public final class Assert {
 		// the following parameters should not be used and keep their default values
 		assertEquals(false, annotation.orphanRemoval());
 		assertEquals(void.class, annotation.targetEntity());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the OneToMany annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param cascadeTypes the operations that must be cascaded to the target of the association
+	 * @param fetchTypes whether the association should be lazily loaded or must be eagerly fetched
+	 * @param mappedBy the field that owns the relationship
+	 */
+	public static void assertOneToManyAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchTypes, String mappedBy) {
+		OneToMany annotation = assertAnnotationPresentOnField(OneToMany.class, c, field);
+		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes));
+		assertEquals(fetchTypes, annotation.fetch());
+		assertEquals(mappedBy, annotation.mappedBy());
+
+		// the following parameters should not be used and keep their default values
+		assertEquals(false, annotation.orphanRemoval());
+		assertEquals(void.class, annotation.targetEntity());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the ManyToOne annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param cascadeTypes the operations that must be cascaded to the target of the association
+	 * @param fetchTypes whether the association should be lazily loaded or must be eagerly fetched
+	 * @param optional whether the association is optional
+	 */
+	public static void assertManyToOneAnnotation(Class c, String field, CascadeType[] cascadeTypes, FetchType fetchTypes, boolean optional) {
+		ManyToOne annotation = assertAnnotationPresentOnField(ManyToOne.class, c, field);
+		assertTrue(Arrays.equals(annotation.cascade(), cascadeTypes));
+		assertEquals(fetchTypes, annotation.fetch());
+		assertEquals(optional, annotation.optional());
+		
+		// the following parameters should not be used and keep their default values
+		assertEquals(void.class, annotation.targetEntity());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the CollectionTable annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param name the name of the collection table
+	 * @param joinColumnNames array of name for the join columns
+	 * @param constraintColumnNames array of constraint names
+	 */
+	public static void assertCollectionTableAnnotation(Class c, String field, String name, String[] joinColumnNames, String[] constraintColumnNames) {
+		CollectionTable annotation = assertAnnotationPresentOnField(CollectionTable.class, c, field);
+		
+		assertEquals(annotation.joinColumns().length, joinColumnNames.length);
+		
+		for (int i = 0 ; i < joinColumnNames.length ; i++) {
+			assertEquals(joinColumnNames[i], annotation.joinColumns()[i].name());
+			
+			// Join column should never be null for a collection table
+			assertEquals("JoinColumn should not be nullable for a CollectionTable", false, annotation.joinColumns()[i].nullable());
+		}
+		
+		// There should be only one constraint for a collection table
+		assertEquals("Only one UniqueConstraint should exists for a CollectionTalble", 1, annotation.uniqueConstraints().length);
+		
+		// Constraints name size should match
+		assertEquals(constraintColumnNames.length, annotation.uniqueConstraints()[0].columnNames().length);
+		
+		// Assert all constraints name
+		for (int i = 0 ; i < constraintColumnNames.length ; i++) {
+			assertEquals(constraintColumnNames[i], annotation.uniqueConstraints()[0].columnNames()[i]);
+			
+			// use default value for the constraint name
+			assertEquals("UniqueConstraint should use the default name", "", annotation.uniqueConstraints()[0].name());
+			
+		}
+		
+		assertEquals(name, annotation.name());
+		
+		// the following parameters should not be used and keep their default values
+		assertEquals("", annotation.schema());
+		assertEquals("", annotation.catalog());
+		assertEquals(0, annotation.indexes().length);
+		
 	}
 	
 	/**
