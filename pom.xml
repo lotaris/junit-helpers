@@ -5,7 +5,7 @@
   <groupId>com.forbesdigital.junit</groupId>
   <artifactId>fd-junit-helpers</artifactId>
   <name>FD Junit Helpers</name>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -100,7 +100,6 @@
 					<configuration>
 						<miniRoxListenerClass>com.lotaris.minirox.client.junit.MiniRoxListener</miniRoxListenerClass>
 						<miniRoxFilterClass>com.lotaris.minirox.client.MiniRoxFilter</miniRoxFilterClass>
-						<roxConfig>${project.basedir}/target/classes/rox.yml</roxConfig>
 					</configuration>
 					<dependencies>
 						<dependency>
