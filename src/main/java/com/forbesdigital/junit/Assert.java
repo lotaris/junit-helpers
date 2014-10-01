@@ -6,6 +6,8 @@ import java.util.Arrays;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -211,19 +213,48 @@ public final class Assert {
 	 * @param unique whether the column is a unique key, by default false
 	 */
 	public static void assertColumnAnnotation(Class c, String field, Boolean nullable, String name, Integer length, Boolean unique) {
+		assertColumnAnnotation(c, field, nullable, name, length, unique, "");
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the Column annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param nullable whether the database column is nullable, by default true
+	 * @param name the name of the column, by default ""
+	 * @param length the column length, by default 255
+	 * @param unique whether the column is a unique key, by default false
+	 * @param columnDefinition the columnDefinition of the column, by default ""
+	 */
+	public static void assertColumnAnnotation(Class c, String field, Boolean nullable, String name, Integer length, Boolean unique, String columnDefinition) {
 		Column annotation = assertAnnotationPresentOnField(Column.class, c, field);
 		assertEquals(nullable != null ? nullable : true, annotation.nullable());
 		assertEquals(name != null ? name : "", annotation.name());
 		assertEquals(length != null ? length : 255, annotation.length());
 		assertEquals(unique != null ? unique : false, annotation.unique());
+		assertEquals(columnDefinition != null ? columnDefinition : "", annotation.columnDefinition());
 		
 		// the following parameters should not be used and keep their default values
-		assertEquals("", annotation.columnDefinition());
 		assertEquals(true, annotation.insertable());
 		assertEquals(0, annotation.precision());
 		assertEquals(0, annotation.scale());
 		assertEquals("", annotation.table());
 		assertEquals(true, annotation.updatable());
+	}
+
+	/**
+	 * Asserts that the specified field on a class is annotated with the Enumerated annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param enumType the enumeration type, by default EnumType.ORDINAL
+	 */
+	public static void assertEnumeratedAnnotation(Class c, String field, EnumType enumType) {
+		Enumerated annotation = assertAnnotationPresentOnField(Enumerated.class, c, field);
+		assertEquals(enumType != null ? enumType : EnumType.ORDINAL, annotation.value());
 	}
 	
 	/**
