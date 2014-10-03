@@ -2,7 +2,10 @@ package com.forbesdigital.junit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -92,6 +95,36 @@ public final class Assert {
 	 */
 	public static void assertNumberOfAnnotationsOnClassEquals(String message, int n, Class c) {
 		assertEquals(message, n, c.getAnnotations().length);
+	}
+	
+	/**
+	 * Asserts that the specified class has exactly the expected number of fields. 
+	 * Non-static fields and inherited fields are not taken into account.
+	 *
+	 * @param n the expected number of fields
+	 * @param c the class
+	 */
+	public static void assertNumberOfNonStaticFields(int n, Class c) {
+		assertNumberOfNonStaticFields("Expected class " + c.getName() + " to have exactly " + n + " non-static fields", n, c);
+	}
+
+	/**
+	 * Asserts that the specified class has exactly the expected number of fields. 
+	 * Non-static fields and inherited fields are not taken into account.
+	 *
+	 * @param message the error message if the number of fields doesn't match
+	 * @param n the expected number of fields
+	 * @param c the class
+	 */
+	public static void assertNumberOfNonStaticFields(String message, int n, Class c) {
+		Field[] fields = c.getDeclaredFields();
+		List<Field> nonStaticFields = new ArrayList<>();
+		for(Field field : fields){
+			if (!Modifier.isStatic(field.getModifiers())) {
+				nonStaticFields.add(field);
+			}
+		}
+		assertEquals(message, n, nonStaticFields.size());
 	}
 
 	/**
