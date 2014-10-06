@@ -19,6 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import static org.junit.Assert.*;
@@ -30,6 +32,7 @@ import static org.junit.Assert.*;
  */
 public final class Assert {
 
+	//<editor-fold defaultstate="collapsed" desc="Assertions on class">
 	/**
 	 * Asserts that an Exception of the class (or subclass) is thrown.
 	 *
@@ -43,7 +46,7 @@ public final class Assert {
 			assertTrue("Expected an exception of type " + exceptionClass.getName() + " (or a subclass) to have been thrown", exceptionClass.isAssignableFrom(e.getClass()));
 		}
 	}
-
+	
 	/**
 	 * Asserts that the specified class is annotated with the specified annotation.
 	 *
@@ -126,7 +129,34 @@ public final class Assert {
 		}
 		assertEquals(message, n, nonStaticFields.size());
 	}
+	
+	/**
+	 * Asserts that the specified class has exactly the expected number of unique constraints.
+	 * An array of the UniqueConstraints of the class is returned so that they can be checked individually.
+	 *
+	 * @param n the expected number of unique constraints
+	 * @param c the class
+	 * @return an array of UniqueConstraint
+	 */
+	public static UniqueConstraint[] assertNumberOfUniqueConstraintsOnClass(int n, Class c) {
+		Table tableAnnotation = assertAnnotationPresentOnClass(Table.class, c);
+		UniqueConstraint[] constraints = tableAnnotation.uniqueConstraints();
+		assertEquals("Expected class " + c.getName() + " to have exactly " + n + " unique constraints.", n, constraints.length);
+		return constraints;
+	}
+	
+	/**
+	 * Asserts that the specified unique constraint has exactly the expected column names in the correct order.
+	 *
+	 * @param uniqueConstraint the UniqueConstraint
+	 * @param expectedGroups the expected column names in the correct order
+	 */
+	public static void assertUniqueConstraintColumnNames(UniqueConstraint uniqueConstraint, String... expectedNames) {
+		assertTrue(Arrays.equals(uniqueConstraint.columnNames(), expectedNames));
+	}
+	//</editor-fold>
 
+	//<editor-fold defaultstate="collapsed" desc="Assertions on fields">
 	/**
 	 * Asserts that the specified field on a class is annotated with the specified
 	 * annotation. An assertion will also be made that the class has that field.
@@ -451,7 +481,8 @@ public final class Assert {
 		
 		assertColumnAnnotation(c, "key", false, "KEE", 10, true);
 	}
-
+	//</editor-fold>
+	
 	//<editor-fold defaultstate="collapsed" desc="Hidden Constructor">
 	private Assert() {
 	}
