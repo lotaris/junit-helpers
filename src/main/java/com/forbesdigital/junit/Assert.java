@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -20,6 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -276,7 +279,7 @@ public final class Assert {
 	 * @param unique whether the column is a unique key, by default false
 	 */
 	public static void assertColumnAnnotation(Class c, String field, Boolean nullable, String name, Integer length, Boolean unique) {
-		assertColumnAnnotation(c, field, nullable, name, length, unique, "");
+		assertColumnAnnotation(c, field, nullable, name, length, unique, null);
 	}
 	
 	/**
@@ -318,6 +321,34 @@ public final class Assert {
 	public static void assertEnumeratedAnnotation(Class c, String field, EnumType enumType) {
 		Enumerated annotation = assertAnnotationPresentOnField(Enumerated.class, c, field);
 		assertEquals(enumType != null ? enumType : EnumType.ORDINAL, annotation.value());
+	}
+
+	/**
+	 * Asserts that the specified field on a class is annotated with the Temporal annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param temporalType the temporal type
+	 */
+	public static void assertTemporalAnnotation(Class c, String field, TemporalType temporalType) {
+		Temporal annotation = assertAnnotationPresentOnField(Temporal.class, c, field);
+		assertEquals(temporalType, annotation.value());
+	}
+	
+	/**
+	 * Asserts that the specified field on a class is annotated with the ElementCollection annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the name of the field to check
+	 * @param targetClass the targetClass, by default void.class 
+	 * @param fetchType the fetch type, by default EnumType.LAZY
+	 */
+	public static void assertElementCollectionAnnotation(Class c, String field, Class targetClass, FetchType fetchType) {
+		ElementCollection annotation = assertAnnotationPresentOnField(ElementCollection.class, c, field);
+		assertEquals(targetClass != null ? targetClass : void.class, annotation.targetClass());
+		assertEquals(fetchType != null ? fetchType : FetchType.LAZY, annotation.fetch());
 	}
 	
 	/**
