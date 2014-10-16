@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -16,8 +18,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -156,6 +162,37 @@ public final class Assert {
 	 */
 	public static void assertUniqueConstraintColumnNames(UniqueConstraint uniqueConstraint, String... expectedNames) {
 		assertTrue(Arrays.equals(uniqueConstraint.columnNames(), expectedNames));
+	}
+	
+	/**
+	 * Asserts that the specified class is annotated with the Table annotation, 
+	 * with the specified parameters.
+	 * @param c the class
+	 * @param name the name of the table
+	 * @param catalog the catalog of the table
+	 * @param schema the schema of the table
+	 * @param uniqueConstraints the unique constraints that are to be placed on the table
+	 * @param indexes the indexes for the table
+	 */
+	public static void assertTableAnnotation(Class c, String name, String catalog, String schema, UniqueConstraint[] uniqueConstraints, Index[] indexes) {
+		Table annotation = assertAnnotationPresentOnClass("Annotation was not found on class", Table.class, c);
+		assertEquals(name != null ? name : "", annotation.name());
+		assertEquals(catalog != null ? catalog : "", annotation.catalog());
+		assertEquals(schema != null ? schema : "", annotation.schema());
+		assertTrue(Arrays.equals(annotation.uniqueConstraints(), uniqueConstraints != null ? uniqueConstraints : new UniqueConstraint[]{}));
+		assertTrue(Arrays.equals(annotation.indexes(), indexes != null ? indexes : new Index[]{}));
+	}
+	
+	/**
+	 * Asserts that the specified lass is annotated with the Inheritance annotation, 
+	 * with the specified inheritance type.
+	 * 
+	 * @param c the class
+	 * @param inheritanceType the inheritance type
+	 */
+	public static void assertInheritanceAnnotaion(Class c, InheritanceType inheritanceType) {
+		Inheritance inheritanceAnnotation = assertAnnotationPresentOnClass(Inheritance.class, c);
+		assertEquals(inheritanceType, inheritanceAnnotation.strategy());
 	}
 	//</editor-fold>
 
@@ -437,19 +474,21 @@ public final class Assert {
 			assertEquals("JoinColumn should not be nullable for a CollectionTable", false, annotation.joinColumns()[i].nullable());
 		}
 		
-		// There should be only one constraint for a collection table
-		assertEquals("Only one UniqueConstraint should exists for a CollectionTalble", 1, annotation.uniqueConstraints().length);
+		// There should be maximum one constraint for a collection table
+		assertTrue("Maximum one UniqueConstraint should exists for a CollectionTalble", 1 >= annotation.uniqueConstraints().length);
 		
-		// Constraints name size should match
-		assertEquals(constraintColumnNames.length, annotation.uniqueConstraints()[0].columnNames().length);
-		
-		// Assert all constraints name
-		for (int i = 0 ; i < constraintColumnNames.length ; i++) {
-			assertEquals(constraintColumnNames[i], annotation.uniqueConstraints()[0].columnNames()[i]);
-			
-			// use default value for the constraint name
-			assertEquals("UniqueConstraint should use the default name", "", annotation.uniqueConstraints()[0].name());
-			
+		// Test constraint column names only if a UniqueConstraint exists
+		if(annotation.uniqueConstraints().length == 1) {
+			// Constraints name size should match
+			assertEquals(constraintColumnNames.length, annotation.uniqueConstraints()[0].columnNames().length);
+
+			// Assert all constraints name
+			for (int i = 0; i < constraintColumnNames.length; i++) {
+				assertEquals(constraintColumnNames[i], annotation.uniqueConstraints()[0].columnNames()[i]);
+
+				// use default value for the constraint name
+				assertEquals("UniqueConstraint should use the default name", "", annotation.uniqueConstraints()[0].name());
+			}
 		}
 		
 		assertEquals(name, annotation.name());
@@ -511,6 +550,186 @@ public final class Assert {
 		assertNumberOfAnnotationsOnFieldEquals(1, c, "key");
 		
 		assertColumnAnnotation(c, "key", false, "KEE", 10, true);
+	}
+	
+	/**
+	 * Asserts that the specified field is annotated with the MapKeyColumn annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the verified field
+	 * @param name the name of the map key column
+	 * @param unique whether the column is a unique key
+	 * @param nullable whether the database column is null-able
+	 * @param insertable whether the column is included in SQL INSERT statements generated by the persistence provider
+	 * @param updatable whether the column is included in SQL UPDATE statements generated by the persistence provider.
+	 * @param columnDefinition the SQL fragment that is used when generating the DDL for the column
+	 * @param table the name of the table that contains the column
+	 * @param length the column length
+	 * @param precision the precision for a decimal (exact numeric) column
+	 * @param scale the scale for a decimal (exact numeric) column
+	 */
+	public static void assertMapKeyColumnAnnotation(Class c, String field, String name,  Boolean unique, Boolean nullable, Boolean insertable, Boolean updatable, 
+				String columnDefinition, String table, Integer length, Integer precision, Integer scale) {
+		
+		MapKeyColumn annotation = assertAnnotationPresentOnField(MapKeyColumn.class, c, field);
+		assertEquals(name != null ? name : "", annotation.name());
+		assertEquals(unique != null ? unique : false, annotation.unique());
+		assertEquals(nullable != null ? nullable : false, annotation.nullable());
+		assertEquals(insertable != null ? insertable : true, annotation.insertable());
+		assertEquals(updatable != null ? updatable : true, annotation.updatable());
+		assertEquals(columnDefinition != null ? columnDefinition : "", annotation.columnDefinition());
+		assertEquals(table != null ? table : "", annotation.table());
+		assertEquals(length != null ? length : 255, annotation.length());
+		assertEquals(precision != null ? precision : 0, annotation.precision());
+		assertEquals(scale != null ? scale : 0, annotation.scale());
+	}
+	
+	/**
+	 * Asserts that the specified field is annotated with the AttributeOverrides annotation, 
+	 * with the specified parameters.
+	 * 
+	 * @param c the class
+	 * @param field the verified field
+	 * @param attributeOverrides the list of expected AttributeOverride annotations contained
+	 */
+	public static void assertAttributeOverridesAnnotation(Class c, String field, AttributeOverrideDetails[] attributeOverrides) {
+		AttributeOverrides annotation = assertAnnotationPresentOnField(AttributeOverrides.class, c, field);
+		assertEquals(attributeOverrides.length, annotation.value().length);
+		
+		for (int i = 0; i < annotation.value().length; i++) {
+			assertInnerAttributeOverrideAnnotation(annotation.value()[i], attributeOverrides[i]);
+		}
+	}
+	
+	/**
+	 * Asserts that the specified AttributeOverride annotation contains the expected details. 
+	 * 
+	 * @param annotation the AttributeOverride annotation verified
+	 * @param expectedDetails the AttributeOverrideDetails object containing the expected details
+	 */
+	private static void assertInnerAttributeOverrideAnnotation(AttributeOverride annotation, AttributeOverrideDetails expectedDetails) {
+		assertEquals(expectedDetails.getName() != null ? expectedDetails.getName() : "", annotation.name());
+		assertEquals(expectedDetails.getColumnName() != null ? expectedDetails.getColumnName() : "", annotation.column().name());
+		assertEquals(expectedDetails.getColumnUnique() != null ? expectedDetails.getColumnUnique() : false, annotation.column().unique());
+		assertEquals(expectedDetails.getColumnNullable() != null ? expectedDetails.getColumnNullable() : true, annotation.column().nullable());
+		assertEquals(expectedDetails.getColumnInsertable() != null ? expectedDetails.getColumnInsertable() : true, annotation.column().insertable());
+		assertEquals(expectedDetails.getColumnUpdatable() != null ? expectedDetails.getColumnUpdatable() : true, annotation.column().updatable());
+		assertEquals(expectedDetails.getColumnDefinition() != null ? expectedDetails.getColumnDefinition() : "", annotation.column().columnDefinition());
+		assertEquals(expectedDetails.getColumnTable() != null ? expectedDetails.getColumnTable() : "", annotation.column().table());
+		assertEquals(expectedDetails.getColumnLength() != null ? expectedDetails.getColumnLength() : 255, annotation.column().length());
+		assertEquals(expectedDetails.getColumnPrecision() != null ? expectedDetails.getColumnPrecision() : 0, annotation.column().precision());
+		assertEquals(expectedDetails.getColumnScale() != null ? expectedDetails.getColumnScale() : 0, annotation.column().scale());
+	}
+	
+	/**
+	 * Helper class to reflect the attributes of an annotation contained within
+	 * another annotation.
+	 */
+	public static class AttributeOverrideDetails {
+		
+		private String name;
+		private String columnName;
+		private Boolean columnUnique;
+		private Boolean columnNullable;
+		private Boolean columnInsertable;
+		private Boolean columnUpdatable;
+		private String columnDefinition;
+		private String columnTable;
+		private Integer columnLength;
+		private Integer columnPrecision;
+		private Integer columnScale;
+		
+		// <editor-fold defaultstate="collapsed" desc="Getters & Setters">
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getColumnName() {
+			return columnName;
+		}
+
+		public void setColumnName(String columnName) {
+			this.columnName = columnName;
+		}
+
+		public Boolean getColumnUnique() {
+			return columnUnique;
+		}
+
+		public void setColumnUnique(Boolean columnUnique) {
+			this.columnUnique = columnUnique;
+		}
+
+		public Boolean getColumnNullable() {
+			return columnNullable;
+		}
+
+		public void setColumnNullable(Boolean columnNullable) {
+			this.columnNullable = columnNullable;
+		}
+
+		public Boolean getColumnInsertable() {
+			return columnInsertable;
+		}
+
+		public void setColumnInsertable(Boolean columnInsertable) {
+			this.columnInsertable = columnInsertable;
+		}
+
+		public Boolean getColumnUpdatable() {
+			return columnUpdatable;
+		}
+
+		public void setColumnUpdatable(Boolean columnUpdatable) {
+			this.columnUpdatable = columnUpdatable;
+		}
+
+		public String getColumnDefinition() {
+			return columnDefinition;
+		}
+
+		public void setColumnDefinition(String columnDefinition) {
+			this.columnDefinition = columnDefinition;
+		}
+
+		public String getColumnTable() {
+			return columnTable;
+		}
+
+		public void setColumnTable(String columnTable) {
+			this.columnTable = columnTable;
+		}
+
+		public Integer getColumnLength() {
+			return columnLength;
+		}
+
+		public void setColumnLength(Integer columnLength) {
+			this.columnLength = columnLength;
+		}
+
+		public Integer getColumnPrecision() {
+			return columnPrecision;
+		}
+
+		public void setColumnPrecision(Integer columnPrecision) {
+			this.columnPrecision = columnPrecision;
+		}
+
+		public Integer getColumnScale() {
+			return columnScale;
+		}
+
+		public void setColumnScale(Integer columnScale) {
+			this.columnScale = columnScale;
+		}
+		// </editor-fold>
+		
 	}
 	//</editor-fold>
 	
