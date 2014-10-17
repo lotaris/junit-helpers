@@ -8,105 +8,105 @@ package com.forbesdigital.junit.helpers;
  */
 public class AttributeOverrideDetails {
 	private String name;
-		private String columnName;
-		private Boolean columnUnique;
-		private Boolean columnNullable;
-		private Boolean columnInsertable;
-		private Boolean columnUpdatable;
-		private String columnDefinition;
-		private String columnTable;
-		private Integer columnLength;
-		private Integer columnPrecision;
-		private Integer columnScale;
-		
-		// <editor-fold defaultstate="collapsed" desc="Getters & Setters">
-		public String getName() {
-			return name;
-		}
+	private String columnName;
+	private Boolean columnUnique;
+	private Boolean columnNullable;
+	private Boolean columnInsertable;
+	private Boolean columnUpdatable;
+	private String columnDefinition;
+	private String columnTable;
+	private Integer columnLength;
+	private Integer columnPrecision;
+	private Integer columnScale;
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	// <editor-fold defaultstate="collapsed" desc="Getters & Setters">
+	public String getName() {
+		return name;
+	}
 
-		public String getColumnName() {
-			return columnName;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public void setColumnName(String columnName) {
-			this.columnName = columnName;
-		}
+	public String getColumnName() {
+		return columnName;
+	}
 
-		public Boolean getColumnUnique() {
-			return columnUnique;
-		}
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
 
-		public void setColumnUnique(Boolean columnUnique) {
-			this.columnUnique = columnUnique;
-		}
+	public Boolean getColumnUnique() {
+		return columnUnique;
+	}
 
-		public Boolean getColumnNullable() {
-			return columnNullable;
-		}
+	public void setColumnUnique(Boolean columnUnique) {
+		this.columnUnique = columnUnique;
+	}
 
-		public void setColumnNullable(Boolean columnNullable) {
-			this.columnNullable = columnNullable;
-		}
+	public Boolean getColumnNullable() {
+		return columnNullable;
+	}
 
-		public Boolean getColumnInsertable() {
-			return columnInsertable;
-		}
+	public void setColumnNullable(Boolean columnNullable) {
+		this.columnNullable = columnNullable;
+	}
 
-		public void setColumnInsertable(Boolean columnInsertable) {
-			this.columnInsertable = columnInsertable;
-		}
+	public Boolean getColumnInsertable() {
+		return columnInsertable;
+	}
 
-		public Boolean getColumnUpdatable() {
-			return columnUpdatable;
-		}
+	public void setColumnInsertable(Boolean columnInsertable) {
+		this.columnInsertable = columnInsertable;
+	}
 
-		public void setColumnUpdatable(Boolean columnUpdatable) {
-			this.columnUpdatable = columnUpdatable;
-		}
+	public Boolean getColumnUpdatable() {
+		return columnUpdatable;
+	}
 
-		public String getColumnDefinition() {
-			return columnDefinition;
-		}
+	public void setColumnUpdatable(Boolean columnUpdatable) {
+		this.columnUpdatable = columnUpdatable;
+	}
 
-		public void setColumnDefinition(String columnDefinition) {
-			this.columnDefinition = columnDefinition;
-		}
+	public String getColumnDefinition() {
+		return columnDefinition;
+	}
 
-		public String getColumnTable() {
-			return columnTable;
-		}
+	public void setColumnDefinition(String columnDefinition) {
+		this.columnDefinition = columnDefinition;
+	}
 
-		public void setColumnTable(String columnTable) {
-			this.columnTable = columnTable;
-		}
+	public String getColumnTable() {
+		return columnTable;
+	}
 
-		public Integer getColumnLength() {
-			return columnLength;
-		}
+	public void setColumnTable(String columnTable) {
+		this.columnTable = columnTable;
+	}
 
-		public void setColumnLength(Integer columnLength) {
-			this.columnLength = columnLength;
-		}
+	public Integer getColumnLength() {
+		return columnLength;
+	}
 
-		public Integer getColumnPrecision() {
-			return columnPrecision;
-		}
+	public void setColumnLength(Integer columnLength) {
+		this.columnLength = columnLength;
+	}
 
-		public void setColumnPrecision(Integer columnPrecision) {
-			this.columnPrecision = columnPrecision;
-		}
+	public Integer getColumnPrecision() {
+		return columnPrecision;
+	}
 
-		public Integer getColumnScale() {
-			return columnScale;
-		}
+	public void setColumnPrecision(Integer columnPrecision) {
+		this.columnPrecision = columnPrecision;
+	}
 
-		public void setColumnScale(Integer columnScale) {
-			this.columnScale = columnScale;
-		}
-		// </editor-fold>
-		
+	public Integer getColumnScale() {
+		return columnScale;
+	}
+
+	public void setColumnScale(Integer columnScale) {
+		this.columnScale = columnScale;
+	}
+	// </editor-fold>
+
 }
