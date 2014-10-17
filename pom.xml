@@ -5,7 +5,7 @@
   <groupId>com.forbesdigital.junit</groupId>
   <artifactId>fd-junit-helpers</artifactId>
   <name>FD Junit Helpers</name>
-  <version>0.6.0</version>
+  <version>0.6.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -177,12 +177,12 @@
 
 	<distributionManagement>
 		<repository>
-			<id>ForbesDigitalReleases</id>
+			<id>ForbesDigitalReleasesDeploy</id>
 			<name>ForbesDigital Release Repository</name>
 			<url>${settings.forbesdigital.nexus.lotaris.releases.url}</url>
 		</repository>
 		<snapshotRepository>
-			<id>ForbesDigitalSnapshots</id>
+			<id>ForbesDigitalSnapshotsDeploy</id>
 			<name>Forbes Digital Snapshot Repository</name>
 			<url>${settings.forbesdigital.nexus.lotaris.snapshots.url}</url>
 		</snapshotRepository>
