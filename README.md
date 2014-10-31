@@ -1,48 +1,42 @@
-# Junit Helpers
+# junit-helpers
 
-## Requirements
+> Various helpers to help writing JUnit tests easier. Provide some annotations lookup to validate that Java EE entities match a defined contract.
 
-| Dependency | Version | Description |
-| ---------- | ------- | ----------- |
-| NodeJS | 0.10+ | |
-| grunt.cli | 0.1+ | This is a command line wrapper around grunt itself. This allows you to have a dedicated version of Grunt for each project you manage and only one command line entry point for that command tool. |
+## Usage
 
-## How to setup your environment
+1. Clone the repository.
 
-You need to be sure that you have already installed `maven-settings-bootstrap` module. Take a look to that [page][maven-bootstrap-project] to do the setup.
-
-Before running the `msb` command, be sure that your `~/.m2/msb.yml` file contains the following variables:
-
-```yml
-vars:
-	nexus_aws_developer_password: <nexus aws developer password. No password? Ask DevOps to get it>
-```
-
-Then, you have to run the commands below:
+2. Run the following command
 
 ```bash
-$> cd <projectFolder>
-$> msb
+cd <projectFolder>
+mvn clean install
 ```
 
-In fact, to run `Maven` commands correctly on those projects, you need to be sure that the correct `settings.xml` is used. By default, `Maven` is looking for a `settings.xml` into `.m2` directory present in your `home_dir`. Then, to override this behavior, `Maven` command can take the argument `-s<pathToTheSettingsXmlFile>`. Then, if you are using different tool or command line to run the `Maven` goals, you need to ensure that the correct `settings.xml` is used (the one present in each project).
+3. Put the following dependency in your pom.xml
 
-## Ready to compile something
+```xml
+<dependency>
+  <groupId>com.lotaris.minirox.client</groupId>
+  <artifactId>minirox-client-java-core</artifactId>
+  <version>2.1.0</version>
+</dependenc>
+```
 
-Follow the next steps:
+### Requirements
 
-1. Open the [FD Junit Helpers][project-repo] in Netbeans
-2. You can also open the sub-modules
-3. Right click on the project
-4. Go to Custom menu
-5. Compile
+* Java 6+
 
-The other goals are used by the `DevOps` team to be able to release the library on `Nexus`.
+## Contributing
 
-## Contribute
+* [Fork](https://help.github.com/articles/fork-a-repo)
+* Create a topic branch - `git checkout -b feature`
+* Push to your branch - `git push origin feature`
+* Create a [pull request](http://help.github.com/pull-requests/) from your branch
 
-If you want to propose improvements to that library, follow the [instructions on confluence][confluence]
+Please add a changelog entry with your name for new features and bug fixes.
 
-[maven-bootstrap-project]: https://github.com/lotaris/maven-settings-bootstrap
-[project-repo]: http://stash.aws.onlotaris.com/projects/LIB/repos/fd-jee-rest/browse
-[confluence]: https://lotaris.atlassian.net/wiki/display/FDW/How+to+Work+with+Libraries
+## License
+
+**junit-helpers** is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+See [LICENSE.txt](LICENSE.txt) for the full text.
