@@ -1,4 +1,4 @@
-package com.forbesdigital.junit.helpers;
+package com.lotaris.junit.helpers;
 
 /**
  * Helper class to reflect the attributes of an annotation contained within

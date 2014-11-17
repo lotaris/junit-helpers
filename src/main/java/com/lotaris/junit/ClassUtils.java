@@ -1,4 +1,4 @@
-package com.forbesdigital.junit;
+package com.lotaris.junit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -34,6 +34,7 @@ public final class ClassUtils {
 	 * @param annotationClass the annotation class
 	 * @return the annotation, or null if the class has no such annotation
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T getAnnotation(Class c, Class<T> annotationClass) {
 		return (T) c.getAnnotation(annotationClass);
 	}

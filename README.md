@@ -4,22 +4,13 @@
 
 ## Usage
 
-1. Clone the repository.
-
-2. Run the following command
-
-```bash
-cd <projectFolder>
-mvn clean install
-```
-
-3. Put the following dependency in your pom.xml
+1. Put the following dependency in your pom.xml
 
 ```xml
 <dependency>
-  <groupId>com.lotaris.minirox.client</groupId>
-  <artifactId>minirox-client-java-core</artifactId>
-  <version>2.1.0</version>
+  <groupId>com.lotaris.junit</groupId>
+  <artifactId>junit-helpers</artifactId>
+  <version>1.0.0</version>
 </dependenc>
 ```
 

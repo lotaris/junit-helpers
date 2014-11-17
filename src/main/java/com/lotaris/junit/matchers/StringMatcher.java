@@ -1,4 +1,4 @@
-package com.forbesdigital.junit.matchers;
+package com.lotaris.junit.matchers;
 
 import org.hamcrest.CustomMatcher;
 

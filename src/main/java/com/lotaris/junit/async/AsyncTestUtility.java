@@ -1,4 +1,4 @@
-package com.forbesdigital.junit.async;
+package com.lotaris.junit.async;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

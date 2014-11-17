@@ -1,6 +1,6 @@
-package com.forbesdigital.junit;
+package com.lotaris.junit;
 
-import com.forbesdigital.junit.helpers.AttributeOverrideDetails;
+import com.lotaris.junit.helpers.AttributeOverrideDetails;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -84,6 +84,7 @@ public final class Assert {
 	 * @param c the class to check
 	 * @return the annotation instance
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T assertAnnotationPresentOnClass(String message, Class<T> annotationClass, Class c) {
 		assertTrue(message, c.isAnnotationPresent(annotationClass));
 		return (T) c.getAnnotation(annotationClass);
